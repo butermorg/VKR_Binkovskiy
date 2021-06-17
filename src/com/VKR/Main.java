@@ -1,20 +1,16 @@
 package com.VKR;
 
-import Math_Logic.*;
-
-import java.awt.*;
-import java.math.BigDecimal;
-import UI.*;
+import UI.App;
 
 import javax.swing.*;
 
 public class Main {
 
     public static void main(String[] args) {
-        int n = 10000;
-        double MX=24, KV=0.25;
+        /*int n = 10000;
+        double MX = 24, KV = 0.25;*/
 
-        JFrame app = new App("Program 1");
+        JFrame app = new App("program 1");
         app.setVisible(true);
 
 
@@ -25,8 +21,8 @@ public class Main {
         app.setVisible(true);*/
         //BS bs = new BS();
         //beta_alfa ba = new beta_alfa();
-       // rand_var rnd = new rand_var();
-       // double a = ba.alfa(MX,KV);
+        // rand_var rnd = new rand_var();
+        // double a = ba.alfa(MX,KV);
         //double b = ba.beta(MX,KV);
         //double x = rnd.Xi(MX,KV);
         /*math_expectation me = new math_expectation();
