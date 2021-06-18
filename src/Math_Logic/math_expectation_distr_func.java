@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import static com.VKR.support_func.rnd;
 import static java.lang.Math.ceil;
-import static java.lang.Math.round;
 
 public class math_expectation_distr_func {
     public Double Xn(ArrayList<Double> x, ArrayList<Double> y) {
@@ -22,9 +21,9 @@ public class math_expectation_distr_func {
     public ArrayList<Double> sample_dev(ArrayList<Double> x) {
         double gamma = 0.9;
         ArrayList<Double> t = new ArrayList<>();
-        for (int i = 0; i < x.size()-1; i++) {
+        for (int i = 0; i < x.size() - 1; i++) {
             double r = rnd();
-                t.add(x.get(i) + ((x.size() - 1) * r - ceil((1-gamma)*(x.size()-1)) + 1) * (x.get(i + 1) - x.get(i)));
+            t.add(x.get(i) + ((x.size() - 1) * r - ceil((1 - gamma) * (x.size() - 1)) + 1) * (x.get(i + 1) - x.get(i)));
 
         }
 

@@ -8,10 +8,6 @@ public class math_expectation {
     private static double Zy = 1.96;
     private static ArrayList<Double> X = new ArrayList<>();
 
-    public static double getZy() {
-        return Zy;
-    }
-
     public ArrayList<Double> getX() {
         return X;
     }
@@ -40,7 +36,7 @@ public class math_expectation {
         if (X.size() > 1) {
             for (int i = 1; i < X.size() + 1; i++) {
 
-                y.add( ((double)i / (X.size() - 1)));
+                y.add(((double) i / (X.size() - 1)));
             }
         } else {
             y.add((double) 0);
@@ -54,7 +50,7 @@ public class math_expectation {
         double ME = Math_Exp(n, MX, KV);
 
         for (int i = 0; i < n; i++) {
-            //sum += this.X.get(i); возможно ошибка
+
             sum += pow(X.get(i), 2);
         }
         return sqrt(abs(sum - n * pow(ME, 2)));

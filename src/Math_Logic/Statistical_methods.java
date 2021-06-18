@@ -34,7 +34,7 @@ public class Statistical_methods {
 
     public double Point_estimate_gamma(ArrayList<Double> x) {
         int m = k + 1;
-        for (int i = k + 1; i < x.size(); i++) {
+        for (int i = k + 1; i + 1 < x.size(); i++) {
             if (R0(m) > Y) {
                 m = i;
             }
@@ -47,7 +47,7 @@ public class Statistical_methods {
         return (r - (double) m + k) / (r - k);
     }
 
-    public double Low_confidence_lim_av(ArrayList<Double> x) {
+    public double Low_confidence_lim_gamma(ArrayList<Double> x) {
         return Point_estimate_gamma(x) / (1 + Yq * (sqrt((1 / Y - 1) / r) / log10(1 / Y)));
     }
 

@@ -1,17 +1,16 @@
 package UI;
 
+import Math_Logic.Statistical_methods;
 import Math_Logic.math_expectation;
 import Math_Logic.math_expectation_distr_func;
 import com.VKR.support_func;
 import org.jfree.chart.ChartPanel;
+import org.jfree.data.xy.XYSeries;
+import validation.Fields;
 
 import javax.swing.*;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 
 public class App extends JFrame {
     private JPanel MainPanel;
@@ -29,29 +28,29 @@ public class App extends JFrame {
     private DefaultTableModel model;
     private JTable table1;
     private JTextField textField_ME_Xn;
+    private JTextField textField_ME_Xn2;
+    private JTextField PEAV1;
+    private JTextField LCLAV1;
+    private JTextField PEG1;
+    private JTextField LCLG1;
+    private JPanel JPanel_Statistic;
+    private JLabel Point_estimate_av;
+    private JLabel Low_confidence_lim_av;
+    private JLabel Point_estimate_gamma;
+    private JLabel Low_confidence_lim_gamma;
+    private JTextField PEAV2;
+    private JTextField LCLAV2;
+    private JTextField PEG2;
+    private JTextField LCLG2;
+    private JLabel T_2;
+    private JLabel T_2al;
+    private JLabel second_lable;
+    private JLabel first_lable;
 
-
-    class TableData extends AbstractTableModel {
-        support_func IO = new support_func();
-
-        public int getRowCount() {
-            return 1;
-        }
-
-        public int getColumnCount() {
-            return IO.Xsort().size();
-        }
-
-        public Object getValueAt(int rowIndex, int columnIndex) {
-            return null;
-        }
-
-
-    }
 
     public App(String title) {
         super(title);
-
+        JPanel_Statistic.setVisible(false);
         tabbedPane1.setVisible(false);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setContentPane(MainPanel);
@@ -59,60 +58,75 @@ public class App extends JFrame {
 
         model = (DefaultTableModel) table1.getModel();
 
-        button1.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                double MX, KV;
-                int i;
-                i = 0;
-                textArea1.setText(null);
-                tabbedPane1.setVisible(false);
-                setBounds(getX(), getY(), getWidth(), 200);
-                if (textField_N.getText().isEmpty()) {
-                    i++;
-                    textField_N.requestFocus();
-                    textArea1.append("\nВведите n");
 
+        button1.addActionListener(e -> {
+            double MX, KV;
+            int i = 0;
+
+            textArea1.setText(null);
+            tabbedPane1.setVisible(false);
+
+            textField_ME_Xn2.setVisible(false);
+            second_lable.setVisible(false);
+            first_lable.setVisible(false);
+
+            T_2.setVisible(false);
+            T_2al.setVisible(false);
+
+            setBounds(getX(), getY(), getWidth(), 200);
+            if (textField_N.getText().isEmpty()) {
+                i++;
+                textField_N.requestFocus();
+                textArea1.append("\nВведите n");
+
+            }
+            if (textField_KV1.getText().isEmpty()) {
+                i++;
+                textField_KV1.requestFocus();
+                textArea1.append("\nВведите KV1");
+
+            }
+            if (textField_M1.getText().isEmpty()) {
+                i++;
+                textField_M1.requestFocus();
+                textArea1.append("\nВведите M1");
+
+            }
+            if (i == 0) {
+                JPanel_Statistic.setVisible(false);
+                tabbedPane1.setVisible(true);
+                setBounds(getX(), getY(), 600, 500);
+
+
+                MX = Double.parseDouble(textField_M1.getText());
+                KV = Double.parseDouble(textField_KV1.getText());
+                int n = Integer.parseInt(textField_N.getText());
+                support_func SF = new support_func();
+                math_expectation me = new math_expectation();
+                JOptionPane.showMessageDialog(null, "math_exp = " + me.Math_Exp(10000, MX, KV) +
+                        "\nlower_lim = " + me.lower_lim(10000, MX, KV) +
+                        "\nupper_lim = " + me.upper_lim(10000, MX, KV));
+                while (table1.getRowCount() > 0) {
+                    model.removeRow(0);
                 }
-                if (textField_KV1.getText().isEmpty()) {
-                    i++;
-                    textField_KV1.requestFocus();
-                    textArea1.append("\nВведите KV1");
+                me.Math_Exp(n, MX, KV);
+                model.setColumnCount(SF.sort(me.getX()).size());
+                model.insertRow(model.getRowCount(), SF.sort(me.getX()).toArray());
+                math_expectation_distr_func medf = new math_expectation_distr_func();
 
-                }
-                if (textField_M1.getText().isEmpty()) {
-                    i++;
-                    textField_M1.requestFocus();
-                    textArea1.append("\nВведите M1");
+                XYSeries series1 = new XYSeries("a");
+                XYSeries series2 = new XYSeries("b");
 
-                }
-                if (i == 0) {
-                    tabbedPane1.setVisible(true);
-                    setBounds(getX(), getY(), 600, 500);
-                    int n = Integer.parseInt(textField_N.getText());
-                    MX = Double.parseDouble(textField_M1.getText());
-                    KV = Double.parseDouble(textField_KV1.getText());
-                    support_func SF = new support_func();
+                XYLineChartExample Chart = new XYLineChartExample();
+                Chart.createSeries(SF.sort(me.getX()), me.getY(), series1);
+                Chart.createSeries(SF.sort(medf.sample_dev(SF.sort(me.getX()))), me.getY(), series2);
 
-                    String massage = "";
-                    math_expectation me = new math_expectation();
-                    JOptionPane.showMessageDialog(null, "math_exp = " + me.Math_Exp(10000, MX, KV) +
-                            "\nlower_lim = " + me.lower_lim(10000, MX, KV) +
-                            "\nupper_lim = " + me.upper_lim(10000, MX, KV));
-                    if (table1.getRowCount() > 1) {
-                        model.removeRow(0);
-                        model.removeRow(0);
-                    }
-                    me.Math_Exp(n, MX, KV);
-                    model.setColumnCount(SF.Xsort().size());
-                    model.insertRow(model.getRowCount(), SF.Xsort().toArray());
-                    ChartPanel graph = new ChartPanel(new XYLineChartExample().makechart(SF.Xsort(), me.getY()));
-                    tabbedPane1.setComponentAt(1, graph);
-                    math_expectation_distr_func medf = new math_expectation_distr_func();
-                    textField_ME_Xn.setText(String.valueOf((medf.Xn(SF.Xsort(), me.getY()))));
-                    model.insertRow(model.getRowCount(), medf.sample_dev(SF.Xsort()).toArray());
+                ChartPanel graph = new ChartPanel(Chart.makechart());
+                tabbedPane1.setComponentAt(1, graph);
 
-                }
+                textField_ME_Xn.setText(String.valueOf((medf.Xn(SF.sort(me.getX()), me.getY()))));
+                model.insertRow(model.getRowCount(), SF.sort(medf.sample_dev(SF.sort(me.getX()))).toArray());
+
             }
         });
 
@@ -183,7 +197,195 @@ public class App extends JFrame {
             }
         });
 
-    }
+        button2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                double MX1, KV1, t1, MX2, KV2, t2;
+                int i = 0;
 
+                textArea1.setText(null);
+                tabbedPane1.setVisible(false);
+                textField_ME_Xn2.setVisible(true);
+                second_lable.setVisible(true);
+                first_lable.setVisible(true);
+
+                setBounds(getX(), getY(), getWidth(), 200);
+                if (textField_N.getText().isEmpty()) {
+                    i++;
+                    textField_N.requestFocus();
+                    textArea1.append("\nВведите n");
+
+                }
+                if (textField_KV1.getText().isEmpty()) {
+                    i++;
+                    textField_KV1.requestFocus();
+                    textArea1.append("\nВведите KV1");
+
+                }
+                if (textField_M1.getText().isEmpty()) {
+                    i++;
+                    textField_M1.requestFocus();
+                    textArea1.append("\nВведите M1");
+
+                }
+                if (textField_KV2.getText().isEmpty()) {
+                    i++;
+                    textField_KV2.requestFocus();
+                    textArea1.append("\nВведите KV2");
+
+                }
+                if (textField_M2.getText().isEmpty()) {
+                    i++;
+                    textField_M2.requestFocus();
+                    textArea1.append("\nВведите M2");
+                }
+                if (textField_t1.getText().isEmpty()) {
+                    i++;
+                    textField_t1.requestFocus();
+                    textArea1.append("\nВведите t1");
+
+                }
+                if (textField_t2.getText().isEmpty()) {
+                    i++;
+                    textField_t2.requestFocus();
+                    textArea1.append("\nВведите t2");
+                }
+                if (i == 0) {
+                    JPanel_Statistic.setVisible(true);
+                    tabbedPane1.setVisible(true);
+                    setBounds(getX(), getY(), 1000, 500);
+                    Point_estimate_av.setText("<html>Точечная оценка <br>среднего остаточного ресурса</html>");
+                    Low_confidence_lim_av.setText("<html>Нижняя доверительная граница<br>среднего остаточного ресурса</html>");
+                    Point_estimate_gamma.setText("<html>Точечная оценка<br>гамма-процентного остаточного ресурса</html>");
+                    Low_confidence_lim_gamma.setText("<html>Нижняя доверительная граница<br>гамма-процентного остаточного ресурса</html>");
+                    int n = Integer.parseInt(textField_N.getText());
+                    MX1 = Double.parseDouble(textField_M1.getText());
+                    KV1 = Double.parseDouble(textField_KV1.getText());
+                    t1 = Double.parseDouble(textField_t1.getText());
+                    MX2 = Double.parseDouble(textField_M1.getText());
+                    KV2 = Double.parseDouble(textField_KV1.getText());
+                    t2 = Double.parseDouble(textField_t1.getText());
+
+                    /*T_2.setText("T_2");
+                    T_2al.setText("T_2*");*/
+                    T_2.setVisible(true);
+                    T_2al.setVisible(true);
+
+                    support_func SF = new support_func();
+                    math_expectation me = new math_expectation();
+                    math_expectation_distr_func medf = new math_expectation_distr_func();
+                    Statistical_methods SM = new Statistical_methods();
+
+                    while (table1.getRowCount() > 0) {
+                        model.removeRow(0);
+                    }
+                    XYSeries series1 = new XYSeries("a");
+                    XYSeries series2 = new XYSeries("a*");
+                    XYSeries series3 = new XYSeries("b");
+                    XYSeries series4 = new XYSeries("b*");
+                    XYLineChartExample Chart = new XYLineChartExample();
+
+
+                    me.Math_Exp(n, MX1, KV1);
+                    Chart.createSeries(SF.sort(me.getX()), me.getY(), series1);
+                    Chart.createSeries(SF.sort(medf.sample_dev(SF.sort(me.getX()))), me.getY(), series2);
+                    model.setColumnCount(SF.sort(me.getX()).size());
+                    model.insertRow(model.getRowCount(), SF.sort(me.getX()).toArray());
+                    model.insertRow(model.getRowCount(), SF.sort(medf.sample_dev(SF.sort(me.getX()))).toArray());
+                    textField_ME_Xn.setText(String.valueOf((medf.Xn(SF.sort(me.getX()), me.getY()))));
+                    PEAV1.setText(String.valueOf(SM.Point_estimate_av(SF.sort(me.getX()), t1)));
+                    LCLAV1.setText(String.valueOf(SM.Low_confidence_lim_av(SF.sort(me.getX()), t1)));
+                    PEG1.setText(String.valueOf(SM.Point_estimate_gamma(SF.sort(me.getX()))));
+                    LCLG1.setText(String.valueOf(SM.Low_confidence_lim_gamma(SF.sort(me.getX()))));
+
+                    me.Math_Exp(n, MX2, KV2);
+                    Chart.createSeries(SF.sort(me.getX()), me.getY(), series3);
+                    Chart.createSeries(SF.sort(medf.sample_dev(SF.sort(me.getX()))), me.getY(), series4);
+                    model.insertRow(model.getRowCount(), SF.sort(me.getX()).toArray());
+                    model.insertRow(model.getRowCount(), SF.sort(medf.sample_dev(SF.sort(me.getX()))).toArray());
+                    textField_ME_Xn2.setText(String.valueOf((medf.Xn(SF.sort(me.getX()), me.getY()))));
+                    PEAV2.setText(String.valueOf(SM.Point_estimate_av(SF.sort(me.getX()), t2)));
+                    LCLAV2.setText(String.valueOf(SM.Low_confidence_lim_av(SF.sort(me.getX()), t2)));
+                    PEG2.setText(String.valueOf(SM.Point_estimate_gamma(SF.sort(me.getX()))));
+                    LCLG2.setText(String.valueOf(SM.Low_confidence_lim_gamma(SF.sort(me.getX()))));
+
+                    ChartPanel graph = new ChartPanel(Chart.makechart());
+                    tabbedPane1.setComponentAt(1, graph);
+
+                }
+            }
+        });
+        textField_N.addKeyListener(new KeyAdapter() {
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (!((c >= '0') && (c <= '9') ||
+                        (c == KeyEvent.VK_BACK_SPACE) ||
+                        (c == KeyEvent.VK_DELETE))) {
+                    getToolkit().beep();
+                    e.consume();
+                }
+            }
+        });
+        textField_M1.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                if (new Fields().double_valid(textField_M1, e)) {
+                    getToolkit().beep();
+                    e.consume();
+                }
+
+            }
+        });
+        textField_KV1.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                if (new Fields().double_valid(textField_KV1, e)) {
+                    getToolkit().beep();
+                    e.consume();
+                }
+
+            }
+        });
+        textField_t1.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                if (new Fields().double_valid(textField_t1, e)) {
+                    getToolkit().beep();
+                    e.consume();
+                }
+
+            }
+        });
+        textField_M2.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                if (new Fields().double_valid(textField_M2, e)) {
+                    getToolkit().beep();
+                    e.consume();
+                }
+
+            }
+        });
+        textField_t2.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                if (new Fields().double_valid(textField_t2, e)) {
+                    getToolkit().beep();
+                    e.consume();
+                }
+
+            }
+        });
+        textField_KV2.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                if (new Fields().double_valid(textField_KV2, e)) {
+                    getToolkit().beep();
+                    e.consume();
+                }
+
+            }
+        });
+    }
 }
 

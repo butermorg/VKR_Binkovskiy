@@ -15,11 +15,12 @@ import java.util.ArrayList;
 
 public class XYLineChartExample extends JFrame {
     private static final long serialVersionUID = 6294689542092367723L;
+    XYSeriesCollection XYSC = new XYSeriesCollection();
 
-    public JFreeChart makechart(ArrayList<Double> x, ArrayList<Double> y) {
+    public JFreeChart makechart() {
 
         // Create dataset
-        XYDataset dataset = createDataset(x, y);
+        XYDataset dataset = XYSC;
         // Create chart
         JFreeChart chart = ChartFactory.createXYLineChart(
                 "Эмпирическая функция распределения наработки",
@@ -34,7 +35,7 @@ public class XYLineChartExample extends JFrame {
         plot.setBackgroundPaint(new Color(232, 232, 232));
 
         plot.setDomainGridlinePaint(Color.black);
-        plot.setRangeGridlinePaint (Color.black);
+        plot.setRangeGridlinePaint(Color.black);
 
 
         XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
@@ -45,23 +46,14 @@ public class XYLineChartExample extends JFrame {
         return chart;
     }
 
-    private XYDataset createDataset(ArrayList<Double> x, ArrayList<Double> y) {
-        XYSeriesCollection dataset = new XYSeriesCollection();
+    public void createSeries(ArrayList<Double> x, ArrayList<Double> y, XYSeries s) {
 
-        XYSeries series = new XYSeries("a");
         for (int i = 0; i < x.size(); i++) {
-            series.add(x.get(i), y.get(i));
+            s.add(x.get(i), y.get(i));
         }
-
-       /* XYSeries series2 = new XYSeries("b");
-        series2.add(-10, 41);
-        series2.add(20, -40);*/
-
         //Add series to dataset
-        dataset.addSeries(series);
-//        dataset.addSeries(series2);
+        XYSC.addSeries(s);
 
-        return dataset;
     }
 
 }

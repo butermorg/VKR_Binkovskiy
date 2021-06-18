@@ -7,7 +7,6 @@ import static java.lang.Math.sqrt;
 public class rand_var {
 
 
-
     private static double Z() {
 
         double sum = 0;
@@ -16,6 +15,7 @@ public class rand_var {
         }
         return sum - 6;
     }
+
     /*Алгоритм моделирования случайной величины*/
     public static double Xi(double MX, double KV) {
         beta_alfa var = new beta_alfa();
