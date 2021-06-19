@@ -13,10 +13,22 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
+/**
+ * The type Xy line chart example.
+ */
 public class XYLineChartExample extends JFrame {
+
     private static final long serialVersionUID = 6294689542092367723L;
+    /**
+     * The Xysc.
+     */
     XYSeriesCollection XYSC = new XYSeriesCollection();
 
+    /**
+     * Makechart j free chart.
+     *
+     * @return the j free chart
+     */
     public JFreeChart makechart() {
 
         // Create dataset
@@ -46,6 +58,13 @@ public class XYLineChartExample extends JFrame {
         return chart;
     }
 
+    /**
+     * Create series.
+     *
+     * @param x the sampling of developments
+     * @param y the gamma
+     * @param s the series
+     */
     public void createSeries(ArrayList<Double> x, ArrayList<Double> y, XYSeries s) {
 
         for (int i = 0; i < x.size(); i++) {

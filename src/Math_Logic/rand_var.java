@@ -1,11 +1,16 @@
 package Math_Logic;
 
-import static com.VKR.support_func.rnd;
+import static Math_Logic.support_func.rnd;
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 
+/**
+ * The type Rand var.
+ */
 public class rand_var {
-
+    /**
+     *
+     */
 
     private static double Z() {
 
@@ -16,6 +21,14 @@ public class rand_var {
         return sum - 6;
     }
 
+    /**
+     * Xi double.
+     *
+     *
+     * @param MX the mathematical expectation
+     * @param KV the coefficient of variation
+     * @return the double
+     */
     /*Алгоритм моделирования случайной величины*/
     public static double Xi(double MX, double KV) {
         beta_alfa var = new beta_alfa();

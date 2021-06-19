@@ -79,7 +79,7 @@
             <properties>
               <horizontalAlignment value="0"/>
               <horizontalTextPosition value="0"/>
-              <text value="Эксперементальный метод оценки остаточного ресурса"/>
+              <text value="Экспериментальный метод оценки остаточного ресурса"/>
             </properties>
           </component>
           <vspacer id="17f8b">
